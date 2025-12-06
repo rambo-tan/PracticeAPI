@@ -8,14 +8,20 @@ const createProgram = async (req, res) => {
     try {
 
         const program = new Program(
+            null,
             req.body.programcode,
-            req.body.description
+            req.body.description,
+            null
         );
 
-        Program.validate(program);
+        if(!program.programcode || !program.description) {
+            return res.status(400).json({ 
+                error: 'programcode and description are required' 
+            });
+        }
 
         const result = await client`
-                SELECT miniproject_program_create( 
+                SELECT miniproject_program_create(              
                     ${program.programcode}, 
                     ${program.description}
                 ) as id;`;
@@ -52,7 +58,11 @@ const updateProgram = async (req, res) => {
             req.body.isactive          
         );
         
-        Program.validate(program);
+        if(!program.programcode || !program.description || program.isactive === undefined) {
+            return res.status(400).json({ 
+                error: 'programcode, description and isactive are required' 
+            });
+        }
 
         const result = await client`
             SELECT miniproject_program_update(
@@ -68,6 +78,11 @@ const updateProgram = async (req, res) => {
     return res.status(200).json({
       status: "success",
       message: `Program updated successfully.`,
+      data: { programid: program.programid,
+                programcode: program.programcode,
+                description: program.description,
+                isactive: program.isactive        
+            }
     });
 
     } catch (error) {

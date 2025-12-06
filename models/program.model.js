@@ -6,11 +6,6 @@ class Program {
         this.isactive = isactive;
     }
 
-    static validate(program) {
-        if (!program.programcode || !program.description) {
-            throw new Error('programcode and description are required');
-        }
-    }
 }
 
 module.exports = Program;
