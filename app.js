@@ -1,19 +1,17 @@
 const express = require('express');
-const dotenv = require("dotenv");
-const bodyParser = require('body-parser');
+require("dotenv").config();
 const setupSwagger = require('./swagger');
 
-dotenv.config();
 const app = express();
 
-app.use(bodyParser.json());
-
-const routes = require('./routes/program.routes');
-app.use('/programs', routes);
-
 app.use(express.json());
-
 setupSwagger(app);
+
+const programRoutes = require('./routes/program.routes');
+const studentRoutes = require('./routes/student.routes');
+
+app.use('/programs', programRoutes);
+app.use('/students', studentRoutes);
 
 const PORT = 3001;
 app.listen(PORT, () => {

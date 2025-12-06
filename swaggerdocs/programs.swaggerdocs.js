@@ -8,6 +8,77 @@
 
 /**
  * @swagger
+ * /programs/{programid}:
+ *   get:
+ *     summary: Retrieve program details
+ *     description: Retrieve details of a program by its ID. If no ID is provided, returns all programs.
+ *     tags:
+ *       - Programs
+ *     parameters:
+ *       - in: path
+ *         name: programid
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the program to retrieve, or 'All' to retrieve all programs.
+ *     responses:
+ *       200:
+ *         description: Successful retrieval of program details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   programid:
+ *                     type: string
+ *                     example: "1"
+ *                   programcode:
+ *                     type: string
+ *                     example: "Cybersecurity Basics"
+ *                   description:
+ *                     type: string
+ *                     example: "An introductory program on cybersecurity concepts"
+ *                   isactive:
+ *                     type: string
+ *                     example: "true"
+ *                   createdat:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2025-12-06T08:00:00Z"
+ *                   modifiedat:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2025-12-06T10:00:00Z"
+ *       400:
+ *         description: Bad request - invalid program ID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Invalid program ID"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Internal server error"
+ *                 details:
+ *                   type: string
+ *                   example: "Database connection failed"
+ */
+
+
+/**
+ * @swagger
  * /programs:
  *   post:
  *     summary: Create a new program

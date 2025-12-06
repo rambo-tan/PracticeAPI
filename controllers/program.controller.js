@@ -1,6 +1,32 @@
 const Program = require('../models/program.model');
 const client = require('../config/db');
 
+const getPrograms = async (req, res) => {
+    try {
+
+        const program = new Program(
+            req.params.programid || "All",
+            null,
+            null,
+            null
+        );
+
+        const result = await client`
+            SELECT * FROM miniproject_program_get(${program.programid});`;
+
+        res.status(200).json(result);
+        
+    } catch (error) {
+
+        console.error('Error fetching programs:', error);
+
+        res.status(500).json({
+            error: 'Internal server error',
+            details: error.message
+        });
+    }
+}
+
 const createProgram = async (req, res) => {
    
     await client `BEGIN`;
@@ -14,11 +40,7 @@ const createProgram = async (req, res) => {
             null
         );
 
-        if(!program.programcode || !program.description) {
-            return res.status(400).json({ 
-                error: 'programcode and description are required' 
-            });
-        }
+        Program.validate(program);
 
         const result = await client`
                 SELECT miniproject_program_create(              
@@ -38,6 +60,7 @@ const createProgram = async (req, res) => {
         await client `ROLLBACK`;
 
         console.error('Error creating program:', error);
+        
        res.status(500).json({ 
             error: 'Internal server error', 
             details: error.message 
@@ -58,11 +81,7 @@ const updateProgram = async (req, res) => {
             req.body.isactive          
         );
         
-        if(!program.programcode || !program.description || program.isactive === undefined) {
-            return res.status(400).json({ 
-                error: 'programcode, description and isactive are required' 
-            });
-        }
+        Program.validate(program);
 
         const result = await client`
             SELECT miniproject_program_update(
@@ -95,5 +114,8 @@ const updateProgram = async (req, res) => {
     }
 }
 
-module.exports = {createProgram, 
-                updateProgram};
+module.exports = {
+    createProgram, 
+    updateProgram,
+    getPrograms
+};

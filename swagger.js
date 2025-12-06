@@ -13,6 +13,7 @@ const options = {
     },
     apis:[
         path.join(__dirname, 'swaggerdocs', 'programs.swaggerdocs.js'),
+        path.join(__dirname, 'swaggerdocs', 'students.swaggerdocs.js'),
     ],
 };
 
